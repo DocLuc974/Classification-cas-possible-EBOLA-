@@ -1,0 +1,382 @@
+<h2 class="sr-only">Outil de triage interactif — Classification Maladie à Virus Ebola selon HCSP 2022 / COREB 2026</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:#c8d9e8;min-height:100vh}
+.app{max-width:680px;margin:0 auto}
+
+.hdr{background:#fff;padding:14px 16px;border-bottom:1px solid #e2e8f0;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.hdr-inner{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.hdr-logo{display:flex;align-items:center;gap:12px;min-width:0}
+.logo-svg{height:44px;width:auto;flex-shrink:0}
+.hdr-div{width:1px;height:38px;background:#e2e8f0;flex-shrink:0}
+.hdr-text{min-width:0}
+.hdr-text h1{font-size:14.5px;font-weight:600;color:#1a3a5f;line-height:1.3}
+.hdr-text .sub{font-size:11px;color:#4a6080;margin-top:2px;line-height:1.4}
+.hdr-text p{font-size:10px;color:#8fa3bb;margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.live-badge{display:inline-flex;align-items:center;gap:5px;background:#fff5f5;border:1px solid #fc8181;color:#c53030;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.pulse{width:7px;height:7px;border-radius:50%;background:#e53e3e;flex-shrink:0;animation:pu 1.5s infinite}
+@keyframes pu{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+.btn-zones{background:#ebf5ff;border:1px solid #bee3f8;border-radius:8px;padding:7px 11px;cursor:pointer;color:#2b6cb0;font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .15s;flex-shrink:0}
+.btn-zones:hover{background:#dbeafe}.btn-zones:active{transform:scale(.95)}
+.btn-install{background:#0057a8;border:1px solid #0057a8;border-radius:8px;padding:7px 11px;cursor:pointer;color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .15s;flex-shrink:0}
+.btn-install:hover{background:#004491}.btn-install:active{transform:scale(.95)}
+
+.stepper{background:#fff;display:flex;padding:12px 16px 10px;border-bottom:1px solid #e2e8f0}
+.si{flex:1;display:flex;flex-direction:column;align-items:center;position:relative}
+.si:not(:last-child)::after{content:'';position:absolute;top:12px;left:50%;width:100%;height:1.5px;background:#e2e8f0;z-index:0}
+.si.done::after,.si.active::after{background:#0057a8}
+.sn{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:500;border:1.5px solid #cbd5e0;background:#fff;color:#a0aec0;position:relative;z-index:1;transition:all .2s}
+.si.active .sn{background:#0057a8;border-color:#0057a8;color:#fff}
+.si.done .sn{background:#0057a8;border-color:#0057a8;color:#fff}
+.sl{font-size:10px;color:#a0aec0;margin-top:4px;text-align:center;line-height:1.2}
+.si.active .sl{color:#0057a8;font-weight:500}.si.done .sl{color:#4a5568}
+
+.body{padding:14px}
+.card{background:#fff;border-radius:var(--border-radius-lg);padding:18px;margin-bottom:12px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.q{font-size:15px;font-weight:500;color:#1a202c;line-height:1.5;margin-bottom:12px}
+.q-sub{font-size:12.5px;color:#718096;margin:-6px 0 13px;line-height:1.5}
+
+.pills{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
+.pill{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1.5px solid #2d3748;border-radius:40px;cursor:pointer;font-size:13px;color:#2d3748;transition:all .12s;user-select:none;background:#fff;min-height:44px}
+.pill:hover{background:#f7fafc}.pill.on{border-color:#0057a8;background:#dbeafe;color:#1e40af}
+.pdot{width:14px;height:14px;border-radius:50%;border:1.5px solid #a0aec0;flex-shrink:0;transition:all .12s}
+.pill.on .pdot{background:#0057a8;border-color:#0057a8}
+
+.zone-status{display:flex;align-items:center;gap:7px;font-size:11.5px;margin-bottom:10px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid}
+.zs-fresh{background:#f0fff4;border-color:#9ae6b4;color:#276749}
+.zs-cached{background:#fffff0;border-color:#ecc94b;color:#744210}
+.zs-default{background:#f7fafc;border-color:#e2e8f0;color:#718096}
+.zs-error{background:#fff5f5;border-color:#fc8181;color:#c53030}
+
+.zones{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.zc{padding:10px 12px;border-radius:var(--border-radius-md);border:0.5px solid #e2e8f0;background:#fff}
+.zc.r{border-left:2.5px solid #e53e3e}.zc.o{border-left:2.5px solid #ed8936}
+.zt{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.zc.r .zt{color:#c53030}.zc.o .zt{color:#c05621}
+.zn{font-size:13px;font-weight:500;color:#1a202c}
+.zsub{font-size:11px;color:#718096;margin-top:2px}
+.spf-link{font-size:11.5px;color:#718096;display:flex;align-items:center;gap:5px;margin-bottom:16px}
+.spf-link a{color:#2b6cb0}
+
+.voie{border:0.5px solid #e2e8f0;border-radius:var(--border-radius-md);margin-bottom:9px;overflow:hidden}
+.vh{padding:10px 13px;display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500}
+.vh-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:12px}
+.va .vh{background:#fff5f5;color:#c53030}.va .vh-tag{background:#fed7d7;color:#c53030}
+.vb .vh,.vc .vh{background:#fffaf0;color:#744210}.vb .vh-tag,.vc .vh-tag{background:#fefcbf;color:#744210}
+.vb-body{padding:10px 13px}
+.chk{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border-radius:var(--border-radius-md);cursor:pointer;font-size:12.5px;color:#2d3748;border:1.5px solid #2d3748;transition:all .12s;margin-bottom:5px;user-select:none;line-height:1.5;background:#fff;min-height:44px}
+.chk:hover{background:#f7fafc}.chk.on{background:#fff5f5;border-color:#fc8181;color:#c53030}
+.cb{width:16px;height:16px;border-radius:4px;border:1.5px solid #a0aec0;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center}
+.chk.on .cb{background:#c53030;border-color:#c53030}
+.chk.on .cb::after{content:'';width:8px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);display:block}
+
+.sub-opts{display:grid;gap:8px;margin-bottom:16px}
+.sopt{border:1.5px solid #2d3748;border-radius:var(--border-radius-lg);padding:14px 15px;cursor:pointer;display:flex;gap:12px;transition:all .15s;user-select:none;background:#fff;min-height:44px}
+.sopt:hover{background:#f7fafc}
+.sopt.ne{border-color:#d69e2e;background:#fffff0}.sopt.ex{border-color:#e53e3e;background:#fff5f5}
+.srad{width:18px;height:18px;border-radius:50%;border:1.5px solid #a0aec0;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center}
+.sopt.ne .srad{border-color:#d69e2e}.sopt.ne .srad::after{content:'';width:9px;height:9px;border-radius:50%;background:#d69e2e}
+.sopt.ex .srad{border-color:#e53e3e}.sopt.ex .srad::after{content:'';width:9px;height:9px;border-radius:50%;background:#e53e3e}
+.st{font-size:14px;font-weight:500;color:#1a202c;margin-bottom:3px}.sd{font-size:12px;color:#718096;line-height:1.5}
+
+.btns{display:flex;gap:8px}
+.btn{flex:1;padding:12px 14px;border:1.5px solid #2d3748;border-radius:var(--border-radius-md);font-size:13px;font-weight:500;cursor:pointer;transition:all .12s;background:#fff;color:#2d3748;min-height:44px}
+.btn:hover{background:#f7fafc}.btn:active{transform:scale(.98)}
+.btn.p{background:#0057a8;color:#fff;border-color:#0057a8}.btn.p:hover{background:#004491}
+.btn.p:disabled{background:#a0aec0;color:#fff;border-color:#a0aec0;cursor:not-allowed;transform:none}
+
+.banner{border-radius:var(--border-radius-md);padding:12px 14px;font-size:13px;font-weight:500;margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;border-left:3px solid}
+.ban-s{background:#fffaf0;border-color:#d69e2e;color:#744210}
+.ban-p{background:#fff5f5;border-color:#e53e3e;color:#c53030}
+
+.hero{border-radius:var(--border-radius-lg);padding:20px 18px;text-align:center;margin-bottom:14px;border:1px solid #e2e8f0}
+.hero.ne{background:#fffff0;border-color:#f6e05e}.hero.ex{background:#fff5f5;border-color:#fed7d7}
+.hero.ok{background:#f7fafc}.hero.exclu{background:#ebf8ff;border-color:#bee3f8}.hero.conf{background:#f0fff4;border-color:#9ae6b4}
+.hero-icon{font-size:28px;line-height:1;margin-bottom:8px}
+.hero-eyebrow{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.7px;color:#a0aec0;margin-bottom:4px}
+.hero-title{font-size:19px;font-weight:500;color:#1a202c}.hero-sub{font-size:13px;color:#718096;margin-top:6px;line-height:1.5}
+
+.act-sec{margin-bottom:14px}
+.act-lbl{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.7px;color:#a0aec0;margin-bottom:7px}
+.act{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--border-radius-md);font-size:12.5px;margin-bottom:5px;border-left:2.5px solid;line-height:1.5}
+.au{background:#fff5f5;border-color:#fc8181;color:#c53030}
+.ai{background:#ebf8ff;border-color:#63b3ed;color:#2b6cb0}
+.aw{background:#fffaf0;border-color:#f6ad55;color:#744210}
+
+.epi{background:#1a365d;border-radius:var(--border-radius-lg);padding:15px;margin-bottom:12px}
+.epi-lbl{font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.7px;color:#90cdf4;margin-bottom:10px}
+.epi-pills{display:flex;flex-wrap:wrap;gap:6px}
+.ep{background:rgba(255,255,255,.1);border:0.5px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 12px;font-size:12.5px;color:#e2e8f0}
+.epi-note{font-size:11px;color:rgba(190,220,255,.5);margin-top:10px;line-height:1.5}
+
+.contacts{border:0.5px solid #e2e8f0;border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:12px}
+.contacts-hdr{padding:9px 13px;background:#f7fafc;font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.7px;color:#a0aec0}
+.crow{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-top:0.5px solid #edf2f7;gap:8px;flex-wrap:wrap}
+.cname{font-size:12.5px;color:#1a202c;line-height:1.3}.csub{font-size:11px;color:#a0aec0;margin-top:1px}
+.ctel{font-size:13px;font-weight:500;color:#0057a8;text-align:right;white-space:nowrap;flex-shrink:0}
+.ctel small{display:block;font-size:11px;font-weight:400;opacity:.75}
+
+.pcr{border:0.5px solid #e2e8f0;border-radius:var(--border-radius-md);padding:12px 13px;font-size:12.5px;color:#718096;line-height:1.6;margin-bottom:12px}
+.pcr strong{color:#1a202c}
+
+.cpe-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;padding:11px 13px;border:0.5px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;font-weight:500;color:#2d3748;background:#fff;margin-bottom:12px;transition:background .12s;min-height:44px}
+.cpe-toggle:hover{background:#f7fafc}
+.cpe-body{display:none;border:0.5px solid #e2e8f0;border-top:none;border-radius:0 0 var(--border-radius-md) var(--border-radius-md);padding:12px 13px;margin-top:-13px;margin-bottom:12px;background:#fff}
+.cpe-body.open{display:block}
+.cpe-r{display:flex;align-items:flex-start;gap:6px;padding:6px 0;border-bottom:0.5px solid #edf2f7;font-size:12px;flex-wrap:wrap}
+.cpe-r:last-child{border-bottom:none}
+.cpe-s{flex:1;min-width:140px;line-height:1.4;color:#2d3748}
+.tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:12px;white-space:nowrap}
+.tf{background:#f0fff4;color:#276749}.te{background:#fffaf0;color:#744210}.tt{background:#fff5f5;color:#c53030}.tm{background:#c53030;color:#fff5f5}
+.cpe-d{font-size:11.5px;color:#718096;line-height:1.4;flex-basis:100%;padding-top:2px}
+
+.restart{width:100%;padding:12px;border:1.5px solid #2d3748;border-radius:var(--border-radius-md);background:#fff;color:#2d3748;font-size:13px;cursor:pointer;transition:all .12s;min-height:44px}
+.restart:hover{background:#f7fafc}
+
+.foot{padding:12px 16px 20px;text-align:center;font-size:11px;color:#a0aec0;line-height:1.7;background:#fff;border-top:1px solid #e2e8f0}
+.foot a{color:#a0aec0}
+
+.modal{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal.open{opacity:1;pointer-events:all}
+.modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.modal-sheet{position:relative;background:#fff;border-radius:18px 18px 0 0;max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1)}
+.modal.open .modal-sheet{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:#e2e8f0;border-radius:2px;margin:12px auto 0}
+.modal-hdr{padding:13px 18px 12px;border-bottom:0.5px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:15px;font-weight:500;color:#1a202c}
+.modal-close{background:transparent;border:none;cursor:pointer;color:#a0aec0;font-size:18px;padding:2px}
+.modal-body{padding:16px 18px 32px}
+
+.cfg-stat{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:var(--border-radius-md);margin-bottom:16px;border:0.5px solid}
+.cfg-stat.fresh{background:#f0fff4;border-color:#9ae6b4}.cfg-stat.cached{background:#fffff0;border-color:#ecc94b}
+.cfg-stat.default{background:#f7fafc;border-color:#e2e8f0}.cfg-stat.error{background:#fff5f5;border-color:#fc8181}
+.cfg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.cfg-stat.fresh .cfg-dot{background:#276749}.cfg-stat.cached .cfg-dot{background:#d69e2e}
+.cfg-stat.default .cfg-dot{background:#a0aec0}.cfg-stat.error .cfg-dot{background:#c53030}
+.cfg-txt{flex:1}.cfg-ttl{font-size:13px;font-weight:500;color:#1a202c}
+.cfg-sub{font-size:11.5px;color:#718096;margin-top:2px;line-height:1.4}
+.cfg-ref{background:transparent;border:0.5px solid #e2e8f0;border-radius:6px;padding:6px 9px;cursor:pointer;font-size:13px;color:#718096;transition:all .12s;flex-shrink:0}
+.cfg-ref:hover{background:#f7fafc}
+
+.inp-lbl{font-size:12px;font-weight:500;color:#4a5568;margin-bottom:5px;display:block}
+.inp{width:100%;padding:10px 12px;border:1.5px solid #2d3748;border-radius:var(--border-radius-md);font-size:13px;color:#1a202c;outline:none;transition:border .12s;font-family:inherit}
+.inp:focus{border-color:#0057a8}
+.inp-help{font-size:11.5px;color:#718096;margin-top:6px;line-height:1.5}
+.inp-help a{color:#0057a8}
+.t-ok{background:#f0fff4;border:0.5px solid #9ae6b4;border-radius:var(--border-radius-md);padding:10px 12px;font-size:12.5px;color:#276749;margin-top:10px;line-height:1.5}
+.t-err{background:#fff5f5;border:0.5px solid #fc8181;border-radius:var(--border-radius-md);padding:10px 12px;font-size:12.5px;color:#c53030;margin-top:10px;line-height:1.5}
+.json-ex{background:#f7fafc;border-radius:var(--border-radius-md);padding:12px;font-size:11px;font-family:monospace;color:#4a5568;margin-top:8px;overflow-x:auto;white-space:pre;line-height:1.6;border:0.5px solid #e2e8f0}
+.sec-div{height:0.5px;background:#e2e8f0;margin:18px 0}
+.sec-lbl{font-size:12px;font-weight:500;color:#4a5568;margin-bottom:8px}
+
+@media(max-width:480px){
+  .body{padding:10px}.hdr{padding:11px 12px}.hdr-div{display:none}
+  .hdr-text h1{font-size:13px}.hdr-text .sub{display:none}
+  .stepper{padding:11px 6px 9px}.sl{display:none}.card{padding:15px}
+  .pills{grid-template-columns:1fr}.btns{flex-direction:column}.btn{text-align:center}
+  .sn{width:22px;height:22px;font-size:10px}.si:not(:last-child)::after{top:11px}
+}
+@media(max-width:360px){
+  .live-badge span:not(.pulse){display:none}.live-badge{padding:5px 8px}
+  .zones{grid-template-columns:1fr}.logo-svg{height:34px}
+}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spinning{animation:spin .8s linear infinite;display:inline-block}
+</style>
+
+<div class="app">
+<div class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-logo">
+
+      <div class="hdr-div"></div>
+      <div class="hdr-text">
+        <h1>Classification MVE / Ebola</h1>
+        <div class="sub">Outil de triage interactif · HCSP 2022 / COREB 2026</div>
+        <p>SMIT · Unité REB · Réf. COREB 2C-101</p>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="live-badge"><span class="pulse"></span><span>Épidémie active</span></div>
+      <button class="btn-zones" onclick="openSettings()"><i class="ti ti-settings" aria-hidden="true"></i><span>Paramètres</span></button>
+      <button class="btn-install" onclick="downloadApp()"><i class="ti ti-download" aria-hidden="true"></i><span>App</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="stepper" id="stepper"></div>
+<div class="body" id="sc"></div>
+
+<div class="foot">
+  Sources : HCSP 17/03/2022 · HCSP 20/10/2021 · Réf. COREB oct. 2025 · Note DGS EN REB avr. 2025 · CHU de La Réunion — SMIT — Mai 2026<br>
+  <a href="https://www.coreb.infectiologie.com" target="_blank">coreb.infectiologie.com</a> · <a href="https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_definition_contact_coexpo_cas.pdf" target="_blank">Définition SPF 27/05/2026</a>
+</div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-bg" onclick="closeSettings()"></div>
+  <div class="modal-sheet" id="modal-sheet"></div>
+</div>
+
+<script>
+const DEFAULT_ZONES={updated:'2026-05-27',source:'Santé publique France',source_url:'https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_definition_contact_coexpo_cas.pdf',zones:[{country:'RDC',type:'province',name:'Ituri',capital:'Bunia',risk:'high'},{country:'RDC',type:'province',name:'Nord Kivu',capital:'Goma',risk:'high'},{country:'RDC',type:'province',name:'Sud Kivu',capital:'Bukavu',risk:'high'},{country:'Ouganda',type:'country',name:'Ouganda',capital:'Kampala',risk:'medium'}]};
+const BUILT_IN_CONFIG_URL='';
+const KEY_URL='mve_cfg_url',KEY_ZONE='mve_zones_cache',KEY_INTERVAL='mve_interval';
+const CFG={url:'',zones:DEFAULT_ZONES.zones,updated:DEFAULT_ZONES.updated,source:DEFAULT_ZONES.source,sourceUrl:DEFAULT_ZONES.source_url,status:'default',fetchedAt:null,interval:7*24*60*60*1000,refreshing:false,testing:false,testResult:null};
+const STEPS=[{n:'1',l:'Clinique'},{n:'2',l:'Zone'},{n:'3',l:'Critères'},{n:'4',l:'Profil'}];
+const SYM=['Fièvre ≥ 38°C','Céphalées sévères','Asthénie','Myalgies / arthralgies','Vomissements','Diarrhée','Douleur abdominale','Saignements inexpliqués','Décès inexpliqué'];
+const EXP=['Contact avec sang / fluides d\'un patient infecté ou suspecté (perso ou pro)','Hospitalisé ou visite dans un ES recevant des patients Ebola','Contact direct avec syndrome hémorragique ou corps défunt sans EPI','Consommation de viande de chasse crue en zone de circulation virale','Laboratoire détenant souches Ebola / chauves-souris / rongeurs / PNH de zone','Contact direct avec faune sauvage (chauves-souris, rongeurs, PNH) en zone','Rapports sexuels avec une personne ayant développé une MVE (sans limite de durée)'];
+const S={step:0,sym:[],vA:[],vB:false,vC:false,sub:null,cpe:false};
+
+function fmtDate(d){if(!d)return'—';try{const dt=new Date(d);return isNaN(dt)?d:dt.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})}catch(e){return d}}
+function nextFetchDate(){if(!CFG.fetchedAt)return null;return new Date(new Date(CFG.fetchedAt).getTime()+CFG.interval)}
+const INTERVALS=[{ms:0,label:'À chaque ouverture'},{ms:3*24*3600e3,label:'Tous les 3 jours'},{ms:7*24*3600e3,label:'Chaque semaine'},{ms:14*24*3600e3,label:'Tous les 14 jours'}];
+
+function loadCfg(){
+  CFG.url=localStorage.getItem(KEY_URL)||BUILT_IN_CONFIG_URL||'';
+  const si=localStorage.getItem(KEY_INTERVAL);if(si)CFG.interval=parseInt(si);
+  try{const c=JSON.parse(localStorage.getItem(KEY_ZONE)||'null');if(c&&Array.isArray(c.zones)&&c.zones.length>0){Object.assign(CFG,{zones:c.zones,updated:c.updated||'',source:c.source||'',sourceUrl:c.source_url||'',fetchedAt:c._at||null,status:'cached'});}}catch(e){}
+}
+
+async function fetchCfg(url){
+  try{
+    const r=await fetch(url,{cache:'no-cache',headers:{Accept:'application/json'}});
+    if(!r.ok)throw new Error(`Erreur HTTP ${r.status}`);
+    const d=await r.json();
+    if(!d.zones||!Array.isArray(d.zones)||d.zones.length===0)throw new Error('Format invalide — champ "zones" manquant ou vide');
+    for(const z of d.zones)if(!z.name||!z.country)throw new Error('"name" et "country" requis dans chaque zone');
+    localStorage.setItem(KEY_ZONE,JSON.stringify({...d,_at:new Date().toISOString()}));
+    return{ok:true,data:d};
+  }catch(e){return{ok:false,error:e.name==='TypeError'?'Erreur réseau ou CORS':e.message};}
+}
+
+function applyCfg(d){Object.assign(CFG,{zones:d.zones,updated:d.updated||'',source:d.source||'',sourceUrl:d.source_url||'',fetchedAt:new Date().toISOString(),status:'fresh'});}
+
+function ste(){
+  const el=document.getElementById('stepper');
+  if(['no_sus','exclu','confirme'].includes(S.step)){el.style.display='none';return}
+  el.style.display='flex';
+  el.innerHTML=STEPS.map((s,i)=>{const c=i<S.step?'done':i===S.step?'active':'';return`<div class="si ${c}"><div class="sn">${i<S.step?'<i class="ti ti-check" style="font-size:11px"></i>':s.n}</div><div class="sl">${s.l}</div></div>`;}).join('');
+}
+
+function r(){ste();const el=document.getElementById('sc');const m={no_sus:rNone,exclu:rExclu,confirme:rConf};if(m[S.step]){el.innerHTML=m[S.step]();return}el.innerHTML=[s0,s1,s2,s3,s4][S.step]?.()??s0();window.scrollTo({top:0,behavior:'smooth'});}
+
+function zonesHtml(){
+  const si={fresh:'zs-fresh',cached:'zs-cached',default:'zs-default',error:'zs-error'}[CFG.status]||'zs-default';
+  const sl={fresh:`<i class="ti ti-circle-check"></i> Zones à jour — ${fmtDate(CFG.updated)} · ${CFG.source||'SPF'}`,cached:`<i class="ti ti-clock"></i> Cache local — ${fmtDate(CFG.updated)}`,default:`<i class="ti ti-database"></i> Données intégrées — ${fmtDate(CFG.updated)}`,error:`<i class="ti ti-alert-circle"></i> Erreur chargement — données intégrées utilisées`}[CFG.status]||'';
+  const rb=`<button onclick="refreshZones()" ${CFG.refreshing?'disabled':''} style="background:transparent;border:0.5px solid rgba(0,0,0,.15);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11.5px;color:inherit;flex-shrink:0;display:flex;align-items:center;gap:4px;font-family:inherit;font-weight:500"><i class="ti ti-refresh${CFG.refreshing?' spinning':''}"></i>${CFG.refreshing?'Vérification...':'Mise à jour'}</button>`;
+  const zc=CFG.zones.map(z=>{const cls=z.risk==='high'?'r':'o';const lbl=z.type==='province'?`${z.country} — Province`:z.country;const cap=z.capital?`${z.type==='province'?'Chef-lieu':'Capitale'} : ${z.capital}`:'';return`<div class="zc ${cls}"><div class="zt">${lbl}</div><div class="zn">${z.name}</div>${cap?`<div class="zsub">${cap}</div>`:''}</div>`;}).join('');
+  const srcUrl=CFG.sourceUrl||'https://www.santepubliquefrance.fr';
+  return`<div class="zone-status ${si}" style="justify-content:space-between">${sl}${rb}</div><div class="zones">${zc}</div><div class="spf-link"><i class="ti ti-external-link"></i><a href="${srcUrl}" target="_blank">Vérifier les zones actives — ${CFG.source||'santepubliquefrance.fr'}</a></div>`;
+}
+
+function s0(){return`<div class="card"><div class="q">Le patient présente-t-il ≥ 1 critère évocateur de MVE ?</div><div class="q-sub"><i class="ti ti-info-circle"></i> Cocher tous les signes présents — 1 critère suffit</div><div class="pills">${SYM.map((s,i)=>`<div class="pill${S.sym.includes(i)?' on':''}" onclick="tS(${i})"><div class="pdot"></div><span>${s}</span></div>`).join('')}</div><div class="btns"><button class="btn" onclick="go('no_sus')"><i class="ti ti-x"></i> Aucun</button><button class="btn p" onclick="nxt()" ${S.sym.length===0?'disabled':''}><i class="ti ti-check"></i> ${S.sym.length} critère${S.sym.length!==1?'s':''} — Continuer</button></div></div>`}
+
+function s1(){return`<div class="card"><div class="q">Retour d'une <strong>zone de circulation virale</strong> dans les 21 derniers jours ?</div>${zonesHtml()}<div class="btns"><button class="btn" onclick="go('no_sus')"><i class="ti ti-x"></i> Non</button><button class="btn p" onclick="nxt()"><i class="ti ti-check"></i> Oui — ≤ 21 jours</button></div></div>`}
+
+function s2(){const any=S.vA.length>0||S.vB||S.vC;return`<div class="card"><div class="banner ban-s"><i class="ti ti-alert-triangle"></i><div><strong>Cas suspect</strong> — Isolement immédiat · Masque chirurgical · Infectiologue REB : <strong>02 62 26 76 51</strong></div></div><div class="q">Le cas remplit-il au moins un critère de cas <strong>possible</strong> ?</div><div class="voie va"><div class="vh"><span><i class="ti ti-circle-filled" style="color:#c53030;font-size:10px;margin-right:4px"></i>Voie A — Exposition à risque établie</span>${S.vA.length?`<span class="vh-tag">✓ ${S.vA.length}</span>`:''}</div><div class="vb-body">${EXP.map((e,i)=>`<div class="chk${S.vA.includes(i)?' on':''}" onclick="tA(${i})"><div class="cb"></div><span>${e}</span></div>`).join('')}</div></div><div class="voie vb"><div class="vh"><span><i class="ti ti-circle-filled" style="color:#d69e2e;font-size:10px;margin-right:4px"></i>Voie B — Exposition impossible à évaluer</span>${S.vB?'<span class="vh-tag">✓</span>':''}</div><div class="vb-body"><div class="chk${S.vB?' on':''}" onclick="tB()"><div class="cb"></div><span>Interrogatoire impossible <strong>ou</strong> exposition à un cas suspect / possible non encore classé</span></div></div></div><div class="voie vc"><div class="vh"><span><i class="ti ti-circle-filled" style="color:#d69e2e;font-size:10px;margin-right:4px"></i>Voie C — Triade clinique sans exposition certaine</span>${S.vC?'<span class="vh-tag">✓</span>':''}</div><div class="vb-body"><div class="chk${S.vC?' on':''}" onclick="tC()"><div class="cb"></div><span><strong>Fièvre</strong> + <strong>signes généraux</strong> (diarrhée, vomissements, asthénie, myalgies, céphalées…) + <strong>hémorragie</strong> (digestive, gingivale, épistaxis, purpura, fausse couche…)</span></div></div></div><div class="btns" style="margin-top:14px"><button class="btn" onclick="go('exclu')"><i class="ti ti-x"></i> Aucun critère</button><button class="btn p" onclick="nxt()" ${!any?'disabled':''}>${any?'Cas possible — suite <i class="ti ti-arrow-right"></i>':'Sélectionner ≥ 1'}</button></div></div>`}
+
+function s3(){return`<div class="card"><div class="banner ban-p"><i class="ti ti-alert-octagon"></i><div><strong>Cas possible</strong> — EPI groupe 4 · Prélèvement CNR FHV en urgence</div></div><div class="q">Profil clinique du patient :</div><div class="sub-opts"><div class="sopt${S.sub==='ne'?' ne':''}" onclick="setSub('ne')"><div class="srad"></div><div><div class="st">Non excréteur</div><div class="sd">Patient stable · Pas de saignement, vomissements ni diarrhée · Pas de soins de réanimation</div></div></div><div class="sopt${S.sub==='ex'?' ex':''}" onclick="setSub('ex')"><div class="srad"></div><div><div class="st">Excréteur / Avéré</div><div class="sd">Sécrétions · Vomissements · Diarrhées · Hémorragies · Soins de réanimation possibles</div></div></div></div><div class="btns"><button class="btn p" onclick="nxt()" ${!S.sub?'disabled':''}>Voir les recommandations <i class="ti ti-arrow-right"></i></button></div></div>`}
+
+function s4(){
+  const ex=S.sub==='ex';
+  const epi=ex?['Pyjama UU + surbottes imp.','SHA','Double gants nitrile ML','Combinaison imp. type 3B (NF EN 14126)','Cagoule','FFP2 (fit-check)','Lunettes couvrantes / heaume','Tablier imp. si soins mouillants']:['Pyjama UU + surbottes','SHA','Double gants nitrile ML','Surblouse imp. / casaque (NF EN 13795)','Cagoule','FFP2 (fit-check)','Lunettes largement couvrantes'];
+  return`<div class="card">
+  <div class="hero ${ex?'ex':'ne'}"><div class="hero-icon">${ex?'🔴':'🟡'}</div><div class="hero-eyebrow">Cas possible</div><div class="hero-title">${ex?'Excréteur / Avéré':'Non excréteur'}</div><div class="hero-sub">${ex?'Risque de transmission maximal — protocole renforcé':'Patient stable — protocole standard groupe 4'}</div></div>
+  <div class="act-sec"><div class="act-lbl"><i class="ti ti-bolt"></i> Actions immédiates</div>
+    <div class="act aw"><i class="ti ti-door"></i> Isolement — chambre seule, porte fermée, matériel dédié</div>
+    <div class="act au"><i class="ti ti-clipboard-text"></i> Signalement ARS Océan Indien immédiat</div>
+    <div class="act ai"><i class="ti ti-phone"></i> Infectiologue REB SMIT Nord : <strong>02 62 26 76 51</strong></div>
+    <div class="act au"><i class="ti ti-flask"></i> Prélèvement CNR FHV — RT-PCR Ebola (Institut Pasteur Paris) · <em>après validation par infectiologue</em></div>
+  </div>
+  <div class="epi"><div class="epi-lbl"><i class="ti ti-shield-check"></i> EPI groupe 4 — ${ex?'Excréteur / Avéré (ESR)':'Non excréteur (hors ESR)'}</div>
+    <div class="epi-pills">${epi.map(e=>`<div class="ep">${e}</div>`).join('')}</div>
+    <div class="epi-note"><i class="ti ti-alert-triangle"></i> Procédure habillage / déshabillage obligatoire · Ne jamais intervenir seul · Réf. COREB 06/06/2026</div>
+  </div>
+  <div class="contacts"><div class="contacts-hdr"><i class="ti ti-phone-call"></i> Contacts d'urgence</div>
+    <div class="crow"><div><div class="cname">CNR FHV — Institut Pasteur Paris</div><div class="csub">Astreinte 7j/7 · 24h/24</div></div><div class="ctel">04 37 28 24 40<small>Nuit : 07 87 94 76 47</small></div></div>
+    <div class="crow"><div><div class="cname">ARS Océan Indien</div></div><div class="ctel">02 62 93 94 13<small>06 93 64 67 62</small></div></div>
+    <div class="crow"><div><div class="cname">Infectiologue REB SMIT Nord</div></div><div class="ctel">02 62 26 76 51</div></div>
+  </div>
+  <div class="pcr">
+    <i class="ti ti-clock"></i> <strong>RT-PCR CNR FHV :</strong> résultat en <strong>3 à 6 h</strong> après réception au CNR · <strong>⚠ Délai d'acheminement depuis La Réunion : min. 24 à 48 h</strong> selon le jour de la semaine et les impondérables (transport aérien)
+    <div style="margin-top:10px;padding:9px 11px;background:#ebf8ff;border-left:2.5px solid #63b3ed;border-radius:4px;font-size:12.5px;color:#2b6cb0;line-height:1.5">
+      <i class="ti ti-building-hospital"></i> <strong>En attente du résultat :</strong> patient isolé en secteur REB — <strong>ESR Réunion : CHU St Denis</strong>
+    </div>
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:flex-start;gap:8px"><span style="background:#fff5f5;border-left:2.5px solid #fc8181;padding:4px 10px;border-radius:4px;font-size:12px;color:#c53030;font-weight:500;white-space:nowrap">PCR positive</span><span style="font-size:12px;color:#718096;line-height:1.5">→ Cas confirmé · Signalement ARS · <strong>Transfert ESR nationale (métropole) à discuter</strong></span></div>
+      <div style="display:flex;align-items:flex-start;gap:8px"><span style="background:#ebf8ff;border-left:2.5px solid #63b3ed;padding:4px 10px;border-radius:4px;font-size:12px;color:#2b6cb0;font-weight:500;white-space:nowrap">PCR négative</span><span style="font-size:12px;color:#718096;line-height:1.5">→ Cas exclu · Levée isolement après avis infectiologue REB</span></div>
+    </div>
+  </div>
+  <button class="cpe-toggle" onclick="tCpe()"><span><i class="ti ti-stethoscope"></i> Niveau de risque — Cas contact</span><i class="ti ti-chevron-${S.cpe?'up':'down'}"></i></button>
+  <div class="cpe-body${S.cpe?' open':''}">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px">
+      <div style="background:#ebf8ff;border-radius:6px;padding:9px 11px;font-size:12px;color:#2b6cb0;line-height:1.4"><div style="font-weight:500;margin-bottom:3px"><i class="ti ti-user-shield"></i> Soignant exposé</div><div style="opacity:.75;font-size:11px">Personnel ayant eu un contact avec le cas index</div></div>
+      <div style="background:#fff5f5;border-radius:6px;padding:9px 11px;font-size:12px;color:#c53030;line-height:1.4"><div style="font-weight:500;margin-bottom:3px"><i class="ti ti-virus"></i> Cas index confirmé</div><div style="opacity:.75;font-size:11px">Patient Ebola confirmé biologiquement (PCR+)</div></div>
+    </div>
+    <div style="display:grid;gap:10px;margin-bottom:12px">
+      <div style="border:0.5px solid #fefcbf;border-radius:var(--border-radius-md);overflow:hidden">
+        <div style="background:#fffff0;padding:8px 12px;font-size:12px;font-weight:500;color:#744210;display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:50%;background:#d69e2e;flex-shrink:0"></span>Cas index non excréteur</div>
+        <div style="padding:4px 10px">${[['Contact rapproché &lt;1 m, sans EPI, sans projection','tf','Faible','Pas de chimioprophylaxie'],['Contact direct avec matériel souillé sans protection','te','Élevé','Discussion collégiale'],['Incidents cumulés lors du déshabillage EPI','tf','Faible','Pas de chimioprophylaxie'],['AES transcutané / exposition muqueuse au sang','tm','Maximal','Chimioprophylaxie sans délai']].map(([s,c,l,d])=>`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fefcbf;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">${s}</div><span class="tag ${c}" style="flex-shrink:0">${l}</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">${d}</div></div>`).join('')}</div>
+      </div>
+      <div style="border:0.5px solid #fed7d7;border-radius:var(--border-radius-md);overflow:hidden">
+        <div style="background:#fff5f5;padding:8px 12px;font-size:12px;font-weight:500;color:#c53030;display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:50%;background:#e53e3e;flex-shrink:0"></span>Cas index excréteur</div>
+        <div style="padding:4px 10px">${[['Contact rapproché &lt;1 m, sans EPI, sans projection','te','Élevé','Discussion collégiale'],['Contact direct avec matériel souillé sans protection','tt','Très élevé','Discussion collégiale urgente'],['Incidents cumulés lors du déshabillage EPI','tt','Très élevé','Discussion collégiale urgente'],['AES transcutané / exposition muqueuse au sang','tm','Maximal','Chimioprophylaxie sans délai']].map(([s,c,l,d])=>`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fed7d7;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">${s}</div><span class="tag ${c}" style="flex-shrink:0">${l}</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">${d}</div></div>`).join('')}</div>
+      </div>
+    </div>
+    <div style="font-size:11.5px;color:#718096">Décision collégiale : infectiologue + hygiéniste + médecin du travail + virologue</div>
+  </div>
+  <button class="restart" onclick="rst()"><i class="ti ti-refresh"></i> Nouveau patient</button>
+</div>`}
+
+function rNone(){return`<div class="card"><div class="hero ok"><div class="hero-icon">✅</div><div class="hero-eyebrow">Résultat</div><div class="hero-title">Pas de suspicion MVE</div><div class="hero-sub">Le patient ne répond pas aux critères · Poursuivre la prise en charge habituelle</div></div><div class="act ai"><i class="ti ti-info-circle"></i> En cas de doute ou d'évolution, réévaluer et contacter l'infectiologue REB.</div><button class="restart" style="margin-top:12px" onclick="rst()"><i class="ti ti-refresh"></i> Nouveau patient</button></div>`}
+function rExclu(){return`<div class="card"><div class="hero exclu"><div class="hero-icon">🔵</div><div class="hero-eyebrow">Résultat</div><div class="hero-title">Cas exclu / Infirmé</div><div class="hero-sub">Critères suspects présents mais aucun critère de cas possible retenu</div></div><div class="act ai" style="margin-top:4px"><i class="ti ti-phone"></i> Levée isolement après avis infectiologue REB</div><div class="act aw" style="margin-top:6px"><i class="ti ti-alert-triangle"></i> Si exclusion impossible → Conférence téléphonique : CNR FHV + infectiologue ESR + ARS + SPF</div><button class="restart" style="margin-top:12px" onclick="rst()"><i class="ti ti-refresh"></i> Nouveau patient</button></div>`}
+function rConf(){return`<div class="card"><div class="hero conf"><div class="hero-icon">🟢</div><div class="hero-eyebrow">Résultat</div><div class="hero-title">Cas confirmé</div><div class="hero-sub">Activation immédiate du protocole ESR</div></div><div class="act-sec" style="margin-top:4px"><div class="act-lbl"><i class="ti ti-bolt"></i> Actions immédiates</div><div class="act au"><i class="ti ti-ambulance"></i> Transfert ESR nationale (métropole) à discuter</div><div class="act au"><i class="ti ti-clipboard-text"></i> Signalement ARS Océan Indien</div><div class="act au"><i class="ti ti-flask"></i> Envoi simultané vers ESR (supervision CNR)</div></div><div class="contacts"><div class="contacts-hdr"><i class="ti ti-phone-call"></i> Contacts urgents</div><div class="crow"><div><div class="cname">ARS Océan Indien</div></div><div class="ctel">02 62 93 94 13</div></div><div class="crow"><div><div class="cname">CNR FHV — Institut Pasteur</div></div><div class="ctel">04 37 28 24 40</div></div></div><button class="restart" onclick="rst()"><i class="ti ti-refresh"></i> Nouveau patient</button></div>`}
+
+const JSON_EX=`{\n  "updated": "2026-05-27",\n  "source": "Santé publique France",\n  "source_url": "https://...",\n  "zones": [\n    {\n      "country": "RDC",\n      "type": "province",\n      "name": "Ituri",\n      "capital": "Bunia",\n      "risk": "high"\n    },\n    {\n      "country": "Ouganda",\n      "type": "country",\n      "name": "Ouganda",\n      "capital": "Kampala",\n      "risk": "medium"\n    }\n  ]\n}`;
+
+function renderModal(){
+  const nxt=nextFetchDate();
+  const nxtStr=nxt?`Prochaine vérification : <strong>${nxt.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long'})}</strong>`:'Prochaine vérification : au prochain lancement';
+  const intOpts=INTERVALS.map(o=>`<option value="${o.ms}" ${CFG.interval===o.ms?'selected':''}>${o.label}</option>`).join('');
+  const si={fresh:{c:'fresh',t:'À jour',s:`Mise à jour : ${fmtDate(CFG.updated)} · Source : ${CFG.source||'—'}`},cached:{c:'cached',t:'Données en cache',s:`Dernière synchro : ${CFG.fetchedAt?fmtDate(CFG.fetchedAt):'—'} · Mise à jour automatique à la prochaine échéance`},default:{c:'default',t:'Données intégrées',s:`Version intégrée dans l'app · ${fmtDate(CFG.updated)}`},error:{c:'error',t:'Erreur de chargement',s:'Vérifier l\'URL ou la connexion réseau'}}[CFG.status]||{c:'default',t:'—',s:'—'};
+  const tr=CFG.testResult?(CFG.testResult.ok?`<div class="t-ok"><i class="ti ti-circle-check"></i> Configuration valide — ${CFG.testResult.data.zones.length} zone(s) · Mis à jour : ${fmtDate(CFG.testResult.data.updated)}</div>`:`<div class="t-err"><i class="ti ti-alert-circle"></i> ${CFG.testResult.error}</div>`):'';
+  document.getElementById('modal-sheet').innerHTML=`<div class="modal-handle"></div><div class="modal-hdr"><div class="modal-title"><i class="ti ti-settings"></i> Configuration — Zones à risque</div><button class="modal-close" onclick="closeSettings()"><i class="ti ti-x"></i></button></div><div class="modal-body"><div class="cfg-stat ${si.c}"><div class="cfg-dot"></div><div class="cfg-txt"><div class="cfg-ttl">${si.t}</div><div class="cfg-sub">${si.s}</div></div><button class="cfg-ref" onclick="manualRefresh()" title="Actualiser"><i class="ti ti-refresh${CFG.testing?' spinning':''}"></i></button></div><label class="inp-lbl" style="margin-top:14px">Fréquence de mise à jour automatique</label><select class="inp" id="cfgInterval" onchange="saveInterval(this.value)">${intOpts}</select><div class="inp-help" style="display:flex;align-items:center;gap:5px"><i class="ti ti-calendar-clock"></i> ${nxtStr}</div><div class="sec-div"></div><label class="inp-lbl">URL du fichier de configuration JSON</label><input class="inp" id="cfgIn" type="url" value="${CFG.url}" placeholder="https://gist.githubusercontent.com/.../raw/zones.json"><div class="inp-help">Recommandé : <a href="https://gist.github.com/new" target="_blank">créer un GitHub Gist</a> avec le format ci-dessous, puis coller l'URL du bouton <strong>Raw</strong>.</div>${tr}<div class="btns" style="margin-top:14px"><button class="btn" onclick="testUrl()"><i class="ti ti-plug"></i> Tester l'URL</button><button class="btn p" onclick="saveUrl()"><i class="ti ti-device-floppy"></i> Enregistrer</button></div><div class="sec-div"></div><div class="sec-lbl"><i class="ti ti-code"></i> Format JSON attendu</div><pre class="json-ex">${JSON_EX}</pre><div style="font-size:11.5px;color:#718096;margin-top:8px;line-height:1.6"><code>risk</code> : <code>"high"</code> → bordure rouge · <code>"medium"</code> → bordure ambre<br><code>type</code> : <code>"province"</code> ou <code>"country"</code></div></div>`;
+}
+
+function openSettings(){CFG.testResult=null;renderModal();requestAnimationFrame(()=>document.getElementById('modal').classList.add('open'))}
+function closeSettings(){document.getElementById('modal').classList.remove('open')}
+function saveInterval(val){CFG.interval=parseInt(val);localStorage.setItem(KEY_INTERVAL,val);renderModal()}
+async function testUrl(){const url=document.getElementById('cfgIn').value.trim();if(!url)return;CFG.testing=true;renderModal();CFG.testResult=await fetchCfg(url);CFG.testing=false;renderModal();}
+async function saveUrl(){const url=document.getElementById('cfgIn').value.trim();CFG.url=url;localStorage.setItem(KEY_URL,url);if(url){CFG.testing=true;renderModal();const res=await fetchCfg(url);CFG.testing=false;if(res.ok){applyCfg(res.data);if(S.step===1)r();}else CFG.status='error';CFG.testResult=res;renderModal();}else{localStorage.removeItem(KEY_URL);closeSettings();}}
+async function manualRefresh(){if(!CFG.url){CFG.testResult={ok:false,error:'Aucune URL configurée'};renderModal();return}CFG.testing=true;renderModal();const res=await fetchCfg(CFG.url);CFG.testing=false;if(res.ok){applyCfg(res.data);if(S.step===1)r();}else CFG.status='error';CFG.testResult=res;renderModal();}
+async function refreshZones(){if(!CFG.url){openSettings();return}CFG.refreshing=true;if(S.step===1)r();const res=await fetchCfg(CFG.url);CFG.refreshing=false;if(res.ok)applyCfg(res.data);else CFG.status='error';if(S.step===1)r();}
+
+function tS(i){const x=S.sym.indexOf(i);x===-1?S.sym.push(i):S.sym.splice(x,1);r()}
+function tA(i){const x=S.vA.indexOf(i);x===-1?S.vA.push(i):S.vA.splice(x,1);r()}
+function tB(){S.vB=!S.vB;r()}function tC(){S.vC=!S.vC;r()}
+function setSub(v){S.sub=v;r()}function tCpe(){S.cpe=!S.cpe;r()}
+function go(s){S.step=s;r()}function nxt(){S.step++;r()}
+function rst(){Object.assign(S,{step:0,sym:[],vA:[],vB:false,vC:false,sub:null,cpe:false});r()}
+
+function downloadApp(){
+  const ROOT=`:root{--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--color-text-primary:#111;--color-text-secondary:#555;--color-text-tertiary:#888;--color-background-primary:#fff;--color-background-secondary:#f6f6f6;--color-background-tertiary:#eee;--color-border-primary:#333;--color-border-secondary:#aaa;--color-border-tertiary:#ddd;--border-radius-sm:4px;--border-radius-md:8px;--border-radius-lg:12px}`;
+  const CSS=document.querySelector('style').textContent;
+  const APP=document.querySelector('.app').outerHTML;
+  const MODAL=document.getElementById('modal').outerHTML;
+  const JS=Array.from(document.querySelectorAll('script')).map(s=>s.textContent).join('\n').replace("const BUILT_IN_CONFIG_URL=''",`const BUILT_IN_CONFIG_URL='${CFG.url||''}'`);
+  const ICON=`data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='36' fill='%230057a8'/><path d='M38 52 A27 27 0 1 0 38 92' stroke='white' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='75' y1='38' x2='75' y2='106' stroke='white' stroke-width='13' stroke-linecap='round'/><line x1='100' y1='38' x2='100' y2='106' stroke='white' stroke-width='13' stroke-linecap='round'/><line x1='75' y1='72' x2='100' y2='72' stroke='white' stroke-width='11' stroke-linecap='round'/><path d='M116 38 L116 80 Q116 106 141 106 Q166 106 166 80 L166 38' stroke='white' stroke-width='13' fill='none' stroke-linecap='round'/><path d='M18 80 Q100 48 175 70' stroke='rgba(255,255,255,0.5)' stroke-width='5' fill='none' stroke-linecap='round'/><text x='96' y='148' font-family='Arial' font-size='16' fill='white' letter-spacing='2' text-anchor='middle' font-weight='600'>LA RÉUNION</text></svg>`;
+  const MAN=`data:application/manifest+json,${encodeURIComponent(JSON.stringify({name:'Triage MVE / Ebola',short_name:'Triage MVE',description:'Outil de triage MVE — CHU de La Réunion SMIT',start_url:'.',display:'standalone',background_color:'#0057a8',theme_color:'#0057a8',icons:[{src:ICON,sizes:'192x192',type:'image/svg+xml'}]}))}`;
+  const html=`<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n<meta name="mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-capable" content="yes">\n<meta name="apple-mobile-web-app-status-bar-style" content="default">\n<meta name="apple-mobile-web-app-title" content="Triage MVE">\n<meta name="theme-color" content="#0057a8">\n<link rel="manifest" href="${MAN}">\n<link rel="apple-touch-icon" href="${ICON}">\n<title>Triage MVE / Ebola — CHU Réunion SMIT</title>\n<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">\n<style>${ROOT}${CSS}html,body{padding-bottom:env(safe-area-inset-bottom,0)}<\/style>\n</head>\n<body>\n${APP}\n${MODAL}\n<script>${JS.replace(/<\/script>/g,'<\\/script>')}<\/script>\n</body>\n</html>`;
+  const enc=new TextEncoder();
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([enc.encode(html)],{type:'text/html;charset=utf-8'})),download:'triage-mve-ebola.html'});
+  document.body.appendChild(a);a.click();a.remove();
+}
+
+async function init(){
+  loadCfg();r();
+  if(CFG.url){const now=Date.now();const lf=CFG.fetchedAt?new Date(CFG.fetchedAt).getTime():0;if(!lf||(now-lf)>=CFG.interval){const res=await fetchCfg(CFG.url);if(res.ok){applyCfg(res.data);if(S.step===1)r();}}}
+}
+init();
+</script>
