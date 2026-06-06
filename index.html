@@ -234,27 +234,7 @@ html,body{padding-bottom:env(safe-area-inset-bottom,0);padding-left:env(safe-are
 </div>
 <div class="modal" id="modal">
   <div class="modal-bg" onclick="closeSettings()"></div>
-  <div class="modal-sheet" id="modal-sheet"><div class="modal-handle"></div><div class="modal-hdr"><div class="modal-title"><i class="ti ti-settings"></i> Configuration — Zones à risque</div><button class="modal-close" onclick="closeSettings()"><i class="ti ti-x"></i></button></div><div class="modal-body"><div class="cfg-stat fresh"><div class="cfg-dot"></div><div class="cfg-txt"><div class="cfg-ttl">À jour</div><div class="cfg-sub">Mise à jour : 27/05/2026 · Source : Santé publique France</div></div><button class="cfg-ref" onclick="manualRefresh()" title="Actualiser"><i class="ti ti-refresh"></i></button></div><label class="inp-lbl" style="margin-top:14px">Fréquence de mise à jour automatique</label><select class="inp" id="cfgInterval" onchange="saveInterval(this.value)"><option value="0" selected="">À chaque ouverture</option><option value="259200000">Tous les 3 jours</option><option value="604800000">Chaque semaine</option><option value="1209600000">Tous les 14 jours</option></select><div class="inp-help" style="display:flex;align-items:center;gap:5px"><i class="ti ti-calendar-clock"></i> Prochaine vérification : <strong>samedi 06 juin</strong></div><div class="sec-div"></div><label class="inp-lbl">URL du fichier de configuration JSON</label><input class="inp" id="cfgIn" type="url" value="https://gist.githubusercontent.com/DocLuc974/1aacb19b613abd61f3089b04db571de8/raw/1addd60738f8971034412ed9db65007a79e0f10a/gistfile1.txt" placeholder="https://gist.githubusercontent.com/.../raw/zones.json"><div class="inp-help">Recommandé : <a href="https://gist.github.com/new" target="_blank">créer un GitHub Gist</a> avec le format ci-dessous, puis coller l'URL du bouton <strong>Raw</strong>.</div><div class="t-ok"><i class="ti ti-circle-check"></i> Configuration valide — 4 zone(s) · Mis à jour : 27/05/2026</div><div class="btns" style="margin-top:14px"><button class="btn" onclick="testUrl()"><i class="ti ti-plug"></i> Tester l'URL</button><button class="btn p" onclick="saveUrl()"><i class="ti ti-device-floppy"></i> Enregistrer</button></div><div class="sec-div"></div><div class="sec-lbl"><i class="ti ti-code"></i> Format JSON attendu</div><pre class="json-ex">{
-  "updated": "2026-05-27",
-  "source": "Santé publique France",
-  "source_url": "https://...",
-  "zones": [
-    {
-      "country": "RDC",
-      "type": "province",
-      "name": "Ituri",
-      "capital": "Bunia",
-      "risk": "high"
-    },
-    {
-      "country": "Ouganda",
-      "type": "country",
-      "name": "Ouganda",
-      "capital": "Kampala",
-      "risk": "medium"
-    }
-  ]
-}</pre><div style="font-size:11.5px;color:#718096;margin-top:8px;line-height:1.6"><code>risk</code> : <code>"high"</code> → bordure rouge · <code>"medium"</code> → bordure ambre<br><code>type</code> : <code>"province"</code> ou <code>"country"</code></div></div></div>
+  <div class="modal-sheet" id="modal-sheet"></div>
 </div>
 <script>
 const DEFAULT_ZONES={updated:'2026-05-27',source:'Santé publique France',source_url:'https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_definition_contact_coexpo_cas.pdf',zones:[{country:'RDC',type:'province',name:'Ituri',capital:'Bunia',risk:'high'},{country:'RDC',type:'province',name:'Nord Kivu',capital:'Goma',risk:'high'},{country:'RDC',type:'province',name:'Sud Kivu',capital:'Bukavu',risk:'high'},{country:'Ouganda',type:'country',name:'Ouganda',capital:'Kampala',risk:'medium'}]};
@@ -401,6 +381,11 @@ function downloadApp(){
   if(!CFG.url){
     if(!confirm('⚠️ Aucune URL Gist configurée.\n\nLes zones à risque ne se mettront pas à jour automatiquement.\n\nContinuer quand même ?')) return;
   }
+  // Attendre le chargement de l'icône puis lancer le téléchargement
+  (iconLoadPromise||Promise.resolve()).then(()=>_doDownload());
+}
+
+function _doDownload(){
   const ROOT=`:root{--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--color-text-primary:#111;--color-text-secondary:#555;--color-text-tertiary:#888;--color-background-primary:#fff;--color-background-secondary:#f6f6f6;--color-background-tertiary:#eee;--color-border-primary:#333;--color-border-secondary:#aaa;--color-border-tertiary:#ddd;--border-radius-sm:4px;--border-radius-md:8px;--border-radius-lg:12px}`;
   const CSS=document.querySelector('style').textContent;
   const APP=document.querySelector('.app').outerHTML;
@@ -457,7 +442,7 @@ async function loadAppIcon(){
 }
 
 async function init(){
-  loadCfg();r();loadAppIcon();
+  loadCfg();r();iconLoadPromise=loadAppIcon();
   if(CFG.url){const now=Date.now();const lf=CFG.fetchedAt?new Date(CFG.fetchedAt).getTime():0;if(!lf||(now-lf)>=CFG.interval){const res=await fetchCfg(CFG.url);if(res.ok){applyCfg(res.data);if(S.step===1)r();}}}
 }
 init();
