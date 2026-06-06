@@ -1,5 +1,19 @@
-<h2 class="sr-only">Outil de triage interactif — Classification Maladie à Virus Ebola selon HCSP 2022 / COREB 2026</h2>
-<style>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Triage MVE">
+<meta name="theme-color" content="#0057a8">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Triage%20MVE%20%2F%20Ebola%22%2C%22short_name%22%3A%22Triage%20MVE%22%2C%22description%22%3A%22Outil%20de%20triage%20MVE%20%E2%80%94%20CHU%20de%20La%20R%C3%A9union%20SMIT%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230057a8%22%2C%22theme_color%22%3A%22%230057a8%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20192%20192'%3E%3Crect%20width%3D'192'%20height%3D'192'%20rx%3D'36'%20fill%3D'%25230057a8'%2F%3E%3Cpath%20d%3D'M38%2052%20A27%2027%200%201%200%2038%2092'%20stroke%3D'white'%20stroke-width%3D'14'%20fill%3D'none'%20stroke-linecap%3D'round'%2F%3E%3Cline%20x1%3D'75'%20y1%3D'38'%20x2%3D'75'%20y2%3D'106'%20stroke%3D'white'%20stroke-width%3D'13'%20stroke-linecap%3D'round'%2F%3E%3Cline%20x1%3D'100'%20y1%3D'38'%20x2%3D'100'%20y2%3D'106'%20stroke%3D'white'%20stroke-width%3D'13'%20stroke-linecap%3D'round'%2F%3E%3Cline%20x1%3D'75'%20y1%3D'72'%20x2%3D'100'%20y2%3D'72'%20stroke%3D'white'%20stroke-width%3D'11'%20stroke-linecap%3D'round'%2F%3E%3Cpath%20d%3D'M116%2038%20L116%2080%20Q116%20106%20141%20106%20Q166%20106%20166%2080%20L166%2038'%20stroke%3D'white'%20stroke-width%3D'13'%20fill%3D'none'%20stroke-linecap%3D'round'%2F%3E%3Cpath%20d%3D'M18%2080%20Q100%2048%20175%2070'%20stroke%3D'rgba(255%2C255%2C255%2C0.5)'%20stroke-width%3D'5'%20fill%3D'none'%20stroke-linecap%3D'round'%2F%3E%3Ctext%20x%3D'96'%20y%3D'148'%20font-family%3D'Arial'%20font-size%3D'16'%20fill%3D'white'%20letter-spacing%3D'2'%20text-anchor%3D'middle'%20font-weight%3D'600'%3ELA%20R%C3%89UNION%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='36' fill='%230057a8'/><path d='M38 52 A27 27 0 1 0 38 92' stroke='white' stroke-width='14' fill='none' stroke-linecap='round'/><line x1='75' y1='38' x2='75' y2='106' stroke='white' stroke-width='13' stroke-linecap='round'/><line x1='100' y1='38' x2='100' y2='106' stroke='white' stroke-width='13' stroke-linecap='round'/><line x1='75' y1='72' x2='100' y2='72' stroke='white' stroke-width='11' stroke-linecap='round'/><path d='M116 38 L116 80 Q116 106 141 106 Q166 106 166 80 L166 38' stroke='white' stroke-width='13' fill='none' stroke-linecap='round'/><path d='M18 80 Q100 48 175 70' stroke='rgba(255,255,255,0.5)' stroke-width='5' fill='none' stroke-linecap='round'/><text x='96' y='148' font-family='Arial' font-size='16' fill='white' letter-spacing='2' text-anchor='middle' font-weight='600'>LA RÉUNION</text></svg>">
+<title>Triage MVE / Ebola — CHU Réunion SMIT</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>:root{--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--color-text-primary:#111;--color-text-secondary:#555;--color-text-tertiary:#888;--color-background-primary:#fff;--color-background-secondary:#f6f6f6;--color-background-tertiary:#eee;--color-border-primary:#333;--color-border-secondary:#aaa;--color-border-tertiary:#ddd;--border-radius-sm:4px;--border-radius-md:8px;--border-radius-lg:12px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font-sans);background:#c8d9e8;min-height:100vh;-webkit-text-size-adjust:100%}
 button,input,select{touch-action:manipulation;font-family:inherit}
@@ -184,8 +198,12 @@ button,input,select{touch-action:manipulation;font-family:inherit}
 }
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .spinning{animation:spin .8s linear infinite;display:inline-block}
-</style>
 
+html,body{padding-bottom:env(safe-area-inset-bottom,0);padding-left:env(safe-area-inset-left,0);padding-right:env(safe-area-inset-right,0)}
+.hdr{padding-top:max(14px,env(safe-area-inset-top,14px))}
+</style>
+</head>
+<body>
 <div class="app">
 <div class="hdr">
   <div class="hdr-inner">
@@ -206,23 +224,41 @@ button,input,select{touch-action:manipulation;font-family:inherit}
   </div>
 </div>
 
-<div class="stepper" id="stepper"></div>
-<div class="body" id="sc"></div>
+<div class="stepper" id="stepper" style="display: flex;"><div class="si active"><div class="sn">1</div><div class="sl">Clinique</div></div><div class="si "><div class="sn">2</div><div class="sl">Zone</div></div><div class="si "><div class="sn">3</div><div class="sl">Critères</div></div><div class="si "><div class="sn">4</div><div class="sl">Profil</div></div></div>
+<div class="body" id="sc"><div class="card"><div class="q">Le patient présente-t-il ≥ 1 critère évocateur de MVE ?</div><div class="q-sub"><i class="ti ti-info-circle"></i> Cocher tous les signes présents — 1 critère suffit</div><div class="pills"><div class="pill" onclick="tS(0)"><div class="pdot"></div><span>Fièvre ≥ 38°C</span></div><div class="pill" onclick="tS(1)"><div class="pdot"></div><span>Céphalées sévères</span></div><div class="pill" onclick="tS(2)"><div class="pdot"></div><span>Asthénie</span></div><div class="pill" onclick="tS(3)"><div class="pdot"></div><span>Myalgies / arthralgies</span></div><div class="pill" onclick="tS(4)"><div class="pdot"></div><span>Vomissements</span></div><div class="pill" onclick="tS(5)"><div class="pdot"></div><span>Diarrhée</span></div><div class="pill" onclick="tS(6)"><div class="pdot"></div><span>Douleur abdominale</span></div><div class="pill" onclick="tS(7)"><div class="pdot"></div><span>Saignements inexpliqués</span></div><div class="pill" onclick="tS(8)"><div class="pdot"></div><span>Décès inexpliqué</span></div></div><div class="btns"><button class="btn" onclick="go('no_sus')"><i class="ti ti-x"></i> Aucun</button><button class="btn p" onclick="nxt()" disabled=""><i class="ti ti-check"></i> 0 critères — Continuer</button></div></div></div>
 
 <div class="foot">
   Sources : HCSP 17/03/2022 · HCSP 20/10/2021 · Réf. COREB oct. 2025 · Note DGS EN REB avr. 2025 · CHU de La Réunion — SMIT — Mai 2026<br>
   <a href="https://www.coreb.infectiologie.com" target="_blank">coreb.infectiologie.com</a> · <a href="https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_definition_contact_coexpo_cas.pdf" target="_blank">Définition SPF 27/05/2026</a>
 </div>
 </div>
-
 <div class="modal" id="modal">
   <div class="modal-bg" onclick="closeSettings()"></div>
-  <div class="modal-sheet" id="modal-sheet"></div>
+  <div class="modal-sheet" id="modal-sheet"><div class="modal-handle"></div><div class="modal-hdr"><div class="modal-title"><i class="ti ti-settings"></i> Configuration — Zones à risque</div><button class="modal-close" onclick="closeSettings()"><i class="ti ti-x"></i></button></div><div class="modal-body"><div class="cfg-stat fresh"><div class="cfg-dot"></div><div class="cfg-txt"><div class="cfg-ttl">À jour</div><div class="cfg-sub">Mise à jour : 27/05/2026 · Source : Santé publique France</div></div><button class="cfg-ref" onclick="manualRefresh()" title="Actualiser"><i class="ti ti-refresh"></i></button></div><label class="inp-lbl" style="margin-top:14px">Fréquence de mise à jour automatique</label><select class="inp" id="cfgInterval" onchange="saveInterval(this.value)"><option value="0" selected="">À chaque ouverture</option><option value="259200000">Tous les 3 jours</option><option value="604800000">Chaque semaine</option><option value="1209600000">Tous les 14 jours</option></select><div class="inp-help" style="display:flex;align-items:center;gap:5px"><i class="ti ti-calendar-clock"></i> Prochaine vérification : <strong>samedi 06 juin</strong></div><div class="sec-div"></div><label class="inp-lbl">URL du fichier de configuration JSON</label><input class="inp" id="cfgIn" type="url" value="https://gist.githubusercontent.com/DocLuc974/1aacb19b613abd61f3089b04db571de8/raw/1addd60738f8971034412ed9db65007a79e0f10a/gistfile1.txt" placeholder="https://gist.githubusercontent.com/.../raw/zones.json"><div class="inp-help">Recommandé : <a href="https://gist.github.com/new" target="_blank">créer un GitHub Gist</a> avec le format ci-dessous, puis coller l'URL du bouton <strong>Raw</strong>.</div><div class="t-ok"><i class="ti ti-circle-check"></i> Configuration valide — 4 zone(s) · Mis à jour : 27/05/2026</div><div class="btns" style="margin-top:14px"><button class="btn" onclick="testUrl()"><i class="ti ti-plug"></i> Tester l'URL</button><button class="btn p" onclick="saveUrl()"><i class="ti ti-device-floppy"></i> Enregistrer</button></div><div class="sec-div"></div><div class="sec-lbl"><i class="ti ti-code"></i> Format JSON attendu</div><pre class="json-ex">{
+  "updated": "2026-05-27",
+  "source": "Santé publique France",
+  "source_url": "https://...",
+  "zones": [
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Ituri",
+      "capital": "Bunia",
+      "risk": "high"
+    },
+    {
+      "country": "Ouganda",
+      "type": "country",
+      "name": "Ouganda",
+      "capital": "Kampala",
+      "risk": "medium"
+    }
+  ]
+}</pre><div style="font-size:11.5px;color:#718096;margin-top:8px;line-height:1.6"><code>risk</code> : <code>"high"</code> → bordure rouge · <code>"medium"</code> → bordure ambre<br><code>type</code> : <code>"province"</code> ou <code>"country"</code></div></div></div>
 </div>
-
 <script>
 const DEFAULT_ZONES={updated:'2026-05-27',source:'Santé publique France',source_url:'https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_definition_contact_coexpo_cas.pdf',zones:[{country:'RDC',type:'province',name:'Ituri',capital:'Bunia',risk:'high'},{country:'RDC',type:'province',name:'Nord Kivu',capital:'Goma',risk:'high'},{country:'RDC',type:'province',name:'Sud Kivu',capital:'Bukavu',risk:'high'},{country:'Ouganda',type:'country',name:'Ouganda',capital:'Kampala',risk:'medium'}]};
-const BUILT_IN_CONFIG_URL='';
+const BUILT_IN_CONFIG_URL='https://gist.githubusercontent.com/DocLuc974/1aacb19b613abd61f3089b04db571de8/raw/1addd60738f8971034412ed9db65007a79e0f10a/gistfile1.txt';
 const KEY_URL='mve_cfg_url',KEY_ZONE='mve_zones_cache',KEY_INTERVAL='mve_interval';
 const CFG={url:'',zones:DEFAULT_ZONES.zones,updated:DEFAULT_ZONES.updated,source:DEFAULT_ZONES.source,sourceUrl:DEFAULT_ZONES.source_url,status:'default',fetchedAt:null,interval:7*24*60*60*1000,refreshing:false,testing:false,testResult:null};
 const STEPS=[{n:'1',l:'Clinique'},{n:'2',l:'Zone'},{n:'3',l:'Critères'},{n:'4',l:'Profil'}];
@@ -362,6 +398,9 @@ function go(s){S.step=s;r()}function nxt(){S.step++;r()}
 function rst(){Object.assign(S,{step:0,sym:[],vA:[],vB:false,vC:false,sub:null,cpe:false});r()}
 
 function downloadApp(){
+  if(!CFG.url){
+    if(!confirm('⚠️ Aucune URL Gist configurée.\n\nLes zones à risque ne se mettront pas à jour automatiquement.\n\nContinuer quand même ?')) return;
+  }
   const ROOT=`:root{--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;--color-text-primary:#111;--color-text-secondary:#555;--color-text-tertiary:#888;--color-background-primary:#fff;--color-background-secondary:#f6f6f6;--color-background-tertiary:#eee;--color-border-primary:#333;--color-border-secondary:#aaa;--color-border-tertiary:#ddd;--border-radius-sm:4px;--border-radius-md:8px;--border-radius-lg:12px}`;
   const CSS=document.querySelector('style').textContent;
   const APP=document.querySelector('.app').outerHTML;
@@ -423,3 +462,5 @@ async function init(){
 }
 init();
 </script>
+</body>
+</html>
