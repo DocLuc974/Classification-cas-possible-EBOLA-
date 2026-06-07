@@ -224,8 +224,67 @@ html,body{padding-bottom:env(safe-area-inset-bottom,0);padding-left:env(safe-are
   </div>
 </div>
 
-<div class="stepper" id="stepper" style="display: flex;"><div class="si active"><div class="sn">1</div><div class="sl">Clinique</div></div><div class="si "><div class="sn">2</div><div class="sl">Zone</div></div><div class="si "><div class="sn">3</div><div class="sl">Critères</div></div><div class="si "><div class="sn">4</div><div class="sl">Profil</div></div></div>
-<div class="body" id="sc"><div class="card"><div class="q">Le patient présente-t-il ≥ 1 critère évocateur de MVE ?</div><div class="q-sub"><i class="ti ti-info-circle"></i> Cocher tous les signes présents — 1 critère suffit</div><div class="pills"><div class="pill" onclick="tS(0)"><div class="pdot"></div><span>Fièvre ≥ 38°C</span></div><div class="pill" onclick="tS(1)"><div class="pdot"></div><span>Céphalées sévères</span></div><div class="pill" onclick="tS(2)"><div class="pdot"></div><span>Asthénie</span></div><div class="pill" onclick="tS(3)"><div class="pdot"></div><span>Myalgies / arthralgies</span></div><div class="pill" onclick="tS(4)"><div class="pdot"></div><span>Vomissements</span></div><div class="pill" onclick="tS(5)"><div class="pdot"></div><span>Diarrhée</span></div><div class="pill" onclick="tS(6)"><div class="pdot"></div><span>Douleur abdominale</span></div><div class="pill" onclick="tS(7)"><div class="pdot"></div><span>Saignements inexpliqués</span></div><div class="pill" onclick="tS(8)"><div class="pdot"></div><span>Décès inexpliqué</span></div></div><div class="btns"><button class="btn" onclick="go('no_sus')"><i class="ti ti-x"></i> Aucun</button><button class="btn p" onclick="nxt()" disabled=""><i class="ti ti-check"></i> 0 critères — Continuer</button></div></div></div>
+<div class="stepper" id="stepper" style="display: flex;"><div class="si done"><div class="sn"><i class="ti ti-check" style="font-size:11px"></i></div><div class="sl">Clinique</div></div><div class="si done"><div class="sn"><i class="ti ti-check" style="font-size:11px"></i></div><div class="sl">Zone</div></div><div class="si done"><div class="sn"><i class="ti ti-check" style="font-size:11px"></i></div><div class="sl">Critères</div></div><div class="si done"><div class="sn"><i class="ti ti-check" style="font-size:11px"></i></div><div class="sl">Profil</div></div></div>
+<div class="body" id="sc"><div class="card">
+  <div class="hero ne"><div class="hero-icon">🟡</div><div class="hero-eyebrow">Cas possible</div><div class="hero-title">Non excréteur</div><div class="hero-sub">Patient stable — protocole standard groupe 4</div></div>
+  <div class="act-sec"><div class="act-lbl"><i class="ti ti-bolt"></i> Actions immédiates</div>
+    <div class="act aw"><i class="ti ti-door"></i> Isolement — chambre seule, porte fermée, matériel dédié</div>
+    <div class="act au"><i class="ti ti-clipboard-text"></i> Signalement ARS Océan Indien immédiat</div>
+    <div class="act ai"><i class="ti ti-phone"></i> Infectiologue REB SMIT Nord : <strong>02 62 26 76 51</strong></div>
+    <div class="act au"><i class="ti ti-flask"></i> Prélèvement CNR FHV — RT-PCR Ebola (Institut Pasteur Paris) · <em>après validation par infectiologue</em></div>
+  </div>
+  <div class="epi"><div class="epi-lbl"><i class="ti ti-shield-check"></i> EPI groupe 4 — Non excréteur (hors ESR)</div>
+    <div class="epi-pills"><div class="ep">Pyjama UU + surbottes</div><div class="ep">SHA</div><div class="ep">Double gants nitrile ML</div><div class="ep">Surblouse imp. / casaque (NF EN 13795)</div><div class="ep">Cagoule</div><div class="ep">FFP2 (fit-check)</div><div class="ep">Lunettes largement couvrantes</div></div>
+    <div class="epi-note"><i class="ti ti-alert-triangle"></i> Procédure habillage / déshabillage obligatoire · Ne jamais intervenir seul · Réf. COREB 06/06/2026</div>
+  </div>
+  <div class="contacts"><div class="contacts-hdr"><i class="ti ti-phone-call"></i> Contacts d'urgence</div>
+    <div class="crow"><div><div class="cname">CNR FHV — Institut Pasteur Paris</div><div class="csub">Astreinte 7j/7 · 24h/24</div></div><div class="ctel">04 37 28 24 40<small>Nuit : 07 87 94 76 47</small></div></div>
+    <div class="crow"><div><div class="cname">ARS Océan Indien</div></div><div class="ctel">02 62 93 94 13<small>06 93 64 67 62</small></div></div>
+    <div class="crow"><div><div class="cname">Infectiologue REB SMIT Nord</div></div><div class="ctel">02 62 26 76 51</div></div>
+  </div>
+  <div class="pcr">
+    <i class="ti ti-clock"></i> <strong>RT-PCR CNR FHV :</strong> résultat en <strong>3 à 6 h</strong> après réception au CNR · <strong>⚠ Délai d'acheminement depuis La Réunion : min. 24 à 48 h</strong> selon le jour de la semaine et les impondérables (transport aérien)
+    <div style="margin-top:10px;padding:9px 11px;background:#ebf8ff;border-left:2.5px solid #63b3ed;border-radius:4px;font-size:12.5px;color:#2b6cb0;line-height:1.5">
+      <i class="ti ti-building-hospital"></i> <strong>En attente du résultat :</strong> patient isolé en secteur REB — <strong>ESR Réunion : CHU St Denis</strong>
+    </div>
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:flex-start;gap:8px"><span style="background:#fff5f5;border-left:2.5px solid #fc8181;padding:4px 10px;border-radius:4px;font-size:12px;color:#c53030;font-weight:500;white-space:nowrap">PCR positive</span><span style="font-size:12px;color:#718096;line-height:1.5">→ Cas confirmé · Signalement ARS · <strong>Transfert ESR nationale (métropole) à discuter</strong></span></div>
+      <div style="display:flex;align-items:flex-start;gap:8px"><span style="background:#ebf8ff;border-left:2.5px solid #63b3ed;padding:4px 10px;border-radius:4px;font-size:12px;color:#2b6cb0;font-weight:500;white-space:nowrap">PCR négative</span><span style="font-size:12px;color:#718096;line-height:1.5">→ Cas exclu · Levée isolement après avis infectiologue REB</span></div>
+    </div>
+  </div>
+  <div style="border:0.5px solid #e2e8f0;border-radius:var(--border-radius-md);padding:12px 13px;margin-bottom:12px">
+    <div style="font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.7px;color:#a0aec0;margin-bottom:8px"><i class="ti ti-link"></i> Ressources</div>
+    <a href="https://www.coreb.infectiologie.com/UserFiles/File/procedures/20260605-fiche-coreb-fhv-ebola.pdf" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#ebf8ff;border-radius:var(--border-radius-md);font-size:12.5px;color:#2b6cb0;text-decoration:none;margin-bottom:6px">
+      <i class="ti ti-file-type-pdf" style="flex-shrink:0"></i>
+      <span>Fiche COREB FHV / Ebola — 05/06/2026</span>
+      <i class="ti ti-external-link" style="margin-left:auto;flex-shrink:0;opacity:.6"></i>
+    </a>
+    <a href="https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_QuestClassementEbola.docx" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0fff4;border-radius:var(--border-radius-md);font-size:12.5px;color:#276749;text-decoration:none">
+      <i class="ti ti-file-text" style="flex-shrink:0"></i>
+      <span>Questionnaire SPF — Classement cas Ebola (27/05/2026)</span>
+      <i class="ti ti-external-link" style="margin-left:auto;flex-shrink:0;opacity:.6"></i>
+    </a>
+  </div>
+  <button class="cpe-toggle" onclick="tCpe()"><span><i class="ti ti-stethoscope"></i> Niveau de risque — Cas contact</span><i class="ti ti-chevron-down"></i></button>
+  <div class="cpe-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px">
+      <div style="background:#ebf8ff;border-radius:6px;padding:9px 11px;font-size:12px;color:#2b6cb0;line-height:1.4"><div style="font-weight:500;margin-bottom:3px"><i class="ti ti-user-shield"></i> Soignant exposé</div><div style="opacity:.75;font-size:11px">Personnel ayant eu un contact avec le cas index</div></div>
+      <div style="background:#fff5f5;border-radius:6px;padding:9px 11px;font-size:12px;color:#c53030;line-height:1.4"><div style="font-weight:500;margin-bottom:3px"><i class="ti ti-virus"></i> Cas index confirmé</div><div style="opacity:.75;font-size:11px">Patient Ebola confirmé biologiquement (PCR+)</div></div>
+    </div>
+    <div style="display:grid;gap:10px;margin-bottom:12px">
+      <div style="border:0.5px solid #fefcbf;border-radius:var(--border-radius-md);overflow:hidden">
+        <div style="background:#fffff0;padding:8px 12px;font-size:12px;font-weight:500;color:#744210;display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:50%;background:#d69e2e;flex-shrink:0"></span>Cas index non excréteur</div>
+        <div style="padding:4px 10px"><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fefcbf;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">Contact rapproché &lt;1 m, sans EPI, sans projection</div><span class="tag tf" style="flex-shrink:0">Faible</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Pas de chimioprophylaxie</div></div><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fefcbf;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">Contact direct avec matériel souillé sans protection</div><span class="tag te" style="flex-shrink:0">Élevé</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Discussion collégiale</div></div><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fefcbf;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">Incidents cumulés lors du déshabillage EPI</div><span class="tag tf" style="flex-shrink:0">Faible</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Pas de chimioprophylaxie</div></div><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fefcbf;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">AES transcutané / exposition muqueuse au sang</div><span class="tag tm" style="flex-shrink:0">Maximal</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Chimioprophylaxie sans délai</div></div></div>
+      </div>
+      <div style="border:0.5px solid #fed7d7;border-radius:var(--border-radius-md);overflow:hidden">
+        <div style="background:#fff5f5;padding:8px 12px;font-size:12px;font-weight:500;color:#c53030;display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:50%;background:#e53e3e;flex-shrink:0"></span>Cas index excréteur</div>
+        <div style="padding:4px 10px"><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fed7d7;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">Contact rapproché &lt;1 m, sans EPI, sans projection</div><span class="tag te" style="flex-shrink:0">Élevé</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Discussion collégiale</div></div><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fed7d7;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">Contact direct avec matériel souillé sans protection</div><span class="tag tt" style="flex-shrink:0">Très élevé</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Discussion collégiale urgente</div></div><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fed7d7;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">Incidents cumulés lors du déshabillage EPI</div><span class="tag tt" style="flex-shrink:0">Très élevé</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Discussion collégiale urgente</div></div><div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid #fed7d7;font-size:12px"><div style="flex:2;line-height:1.4;color:#1a202c">AES transcutané / exposition muqueuse au sang</div><span class="tag tm" style="flex-shrink:0">Maximal</span><div style="flex:1.5;font-size:11.5px;color:#718096;line-height:1.4">Chimioprophylaxie sans délai</div></div></div>
+      </div>
+    </div>
+    <div style="font-size:11.5px;color:#718096">Décision collégiale : infectiologue + hygiéniste + médecin du travail + virologue</div>
+  </div>
+  <button class="restart" onclick="rst()"><i class="ti ti-refresh"></i> Nouveau patient</button>
+</div></div>
 
 <div class="foot">
   Sources : HCSP 17/03/2022 · HCSP 20/10/2021 · Réf. COREB oct. 2025 · Note DGS EN REB avr. 2025 · CHU de La Réunion — SMIT — Mai 2026<br>
@@ -234,7 +293,27 @@ html,body{padding-bottom:env(safe-area-inset-bottom,0);padding-left:env(safe-are
 </div>
 <div class="modal" id="modal">
   <div class="modal-bg" onclick="closeSettings()"></div>
-  <div class="modal-sheet" id="modal-sheet"></div>
+  <div class="modal-sheet" id="modal-sheet"><div class="modal-handle"></div><div class="modal-hdr"><div class="modal-title"><i class="ti ti-settings"></i> Configuration — Zones à risque</div><button class="modal-close" onclick="closeSettings()"><i class="ti ti-x"></i></button></div><div class="modal-body"><div class="cfg-stat fresh"><div class="cfg-dot"></div><div class="cfg-txt"><div class="cfg-ttl">À jour</div><div class="cfg-sub">Mise à jour : 27/05/2026 · Source : Santé publique France</div></div><button class="cfg-ref" onclick="manualRefresh()" title="Actualiser"><i class="ti ti-refresh"></i></button></div><label class="inp-lbl" style="margin-top:14px">Fréquence de mise à jour automatique</label><select class="inp" id="cfgInterval" onchange="saveInterval(this.value)"><option value="0" selected="">À chaque ouverture</option><option value="259200000">Tous les 3 jours</option><option value="604800000">Chaque semaine</option><option value="1209600000">Tous les 14 jours</option></select><div class="inp-help" style="display:flex;align-items:center;gap:5px"><i class="ti ti-calendar-clock"></i> Prochaine vérification : <strong>dimanche 07 juin</strong></div><div class="sec-div"></div><label class="inp-lbl">URL du fichier de configuration JSON</label><input class="inp" id="cfgIn" type="url" value="https://gist.githubusercontent.com/DocLuc974/1aacb19b613abd61f3089b04db571de8/raw/1addd60738f8971034412ed9db65007a79e0f10a/gistfile1.txt" placeholder="https://gist.githubusercontent.com/.../raw/zones.json"><div class="inp-help">Recommandé : <a href="https://gist.github.com/new" target="_blank">créer un GitHub Gist</a> avec le format ci-dessous, puis coller l'URL du bouton <strong>Raw</strong>.</div><div class="t-ok"><i class="ti ti-circle-check"></i> Configuration valide — 4 zone(s) · Mis à jour : 27/05/2026</div><div class="btns" style="margin-top:14px"><button class="btn" onclick="testUrl()"><i class="ti ti-plug"></i> Tester l'URL</button><button class="btn p" onclick="saveUrl()"><i class="ti ti-device-floppy"></i> Enregistrer</button></div><div class="sec-div"></div><div class="sec-lbl"><i class="ti ti-code"></i> Format JSON attendu</div><pre class="json-ex">{
+  "updated": "2026-05-27",
+  "source": "Santé publique France",
+  "source_url": "https://...",
+  "zones": [
+    {
+      "country": "RDC",
+      "type": "province",
+      "name": "Ituri",
+      "capital": "Bunia",
+      "risk": "high"
+    },
+    {
+      "country": "Ouganda",
+      "type": "country",
+      "name": "Ouganda",
+      "capital": "Kampala",
+      "risk": "medium"
+    }
+  ]
+}</pre><div style="font-size:11.5px;color:#718096;margin-top:8px;line-height:1.6"><code>risk</code> : <code>"high"</code> → bordure rouge · <code>"medium"</code> → bordure ambre<br><code>type</code> : <code>"province"</code> ou <code>"country"</code></div></div></div>
 </div>
 <script>
 const DEFAULT_ZONES={updated:'2026-05-27',source:'Santé publique France',source_url:'https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_definition_contact_coexpo_cas.pdf',zones:[{country:'RDC',type:'province',name:'Ituri',capital:'Bunia',risk:'high'},{country:'RDC',type:'province',name:'Nord Kivu',capital:'Goma',risk:'high'},{country:'RDC',type:'province',name:'Sud Kivu',capital:'Bukavu',risk:'high'},{country:'Ouganda',type:'country',name:'Ouganda',capital:'Kampala',risk:'medium'}]};
@@ -325,6 +404,19 @@ function s4(){
       <div style="display:flex;align-items:flex-start;gap:8px"><span style="background:#fff5f5;border-left:2.5px solid #fc8181;padding:4px 10px;border-radius:4px;font-size:12px;color:#c53030;font-weight:500;white-space:nowrap">PCR positive</span><span style="font-size:12px;color:#718096;line-height:1.5">→ Cas confirmé · Signalement ARS · <strong>Transfert ESR nationale (métropole) à discuter</strong></span></div>
       <div style="display:flex;align-items:flex-start;gap:8px"><span style="background:#ebf8ff;border-left:2.5px solid #63b3ed;padding:4px 10px;border-radius:4px;font-size:12px;color:#2b6cb0;font-weight:500;white-space:nowrap">PCR négative</span><span style="font-size:12px;color:#718096;line-height:1.5">→ Cas exclu · Levée isolement après avis infectiologue REB</span></div>
     </div>
+  </div>
+  <div style="border:0.5px solid #e2e8f0;border-radius:var(--border-radius-md);padding:12px 13px;margin-bottom:12px">
+    <div style="font-size:10.5px;font-weight:500;text-transform:uppercase;letter-spacing:.7px;color:#a0aec0;margin-bottom:8px"><i class="ti ti-link"></i> Ressources</div>
+    <a href="https://www.coreb.infectiologie.com/UserFiles/File/procedures/20260605-fiche-coreb-fhv-ebola.pdf" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#ebf8ff;border-radius:var(--border-radius-md);font-size:12.5px;color:#2b6cb0;text-decoration:none;margin-bottom:6px">
+      <i class="ti ti-file-type-pdf" style="flex-shrink:0"></i>
+      <span>Fiche COREB FHV / Ebola — 05/06/2026</span>
+      <i class="ti ti-external-link" style="margin-left:auto;flex-shrink:0;opacity:.6"></i>
+    </a>
+    <a href="https://www.santepubliquefrance.fr/sites/default/files/2026-05/2026_05_27_QuestClassementEbola.docx" target="_blank" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#f0fff4;border-radius:var(--border-radius-md);font-size:12.5px;color:#276749;text-decoration:none">
+      <i class="ti ti-file-text" style="flex-shrink:0"></i>
+      <span>Questionnaire SPF — Classement cas Ebola (27/05/2026)</span>
+      <i class="ti ti-external-link" style="margin-left:auto;flex-shrink:0;opacity:.6"></i>
+    </a>
   </div>
   <button class="cpe-toggle" onclick="tCpe()"><span><i class="ti ti-stethoscope"></i> Niveau de risque — Cas contact</span><i class="ti ti-chevron-${S.cpe?'up':'down'}"></i></button>
   <div class="cpe-body${S.cpe?' open':''}">
